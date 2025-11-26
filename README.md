@@ -4,8 +4,8 @@ Ce projet est une application web de gestion de collection de personnages (CRUD)
 
 ## 📋 Prérequis et Installation
 
-1.  **Base de données** : Importer le script SQL fourni dans votre SGBD (MySQL/MariaDB).
-2.  **Configuration** : Assurez-vous que le fichier `Config/dev.ini` (ou `prod.ini`) contient les bons identifiants de connexion à la base de données.
+1.  **Base de données** : Importer le script SQL fourni dans le fichier BDD.sql dans votre SGBD.
+2.  **Configuration** : Assurez-vous que le fichier `Config/dev.ini` contient les bons identifiants de connexion à la base de données.
 
 ## 🚀 Particularités du Projet
 

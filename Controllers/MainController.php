@@ -38,13 +38,5 @@ class MainController
         ]);
     }
 
-    /**
-     * Affiche la vue des logs (Redondant avec LogController, à vérifier si nécessaire).
-     *
-     * @return void
-     */
-    public function logs(): void
-    {
-        echo $this->templates->render('logs');
-    }
+
 }
