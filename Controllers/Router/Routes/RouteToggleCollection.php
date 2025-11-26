@@ -6,10 +6,10 @@ use Controllers\PersonnageController;
 class RouteToggleCollection extends Route
 {
     /**
-     * @var PersonnageController
+     * Constructeur de la route d'ajout/retrait de collection.
+     *
+     * @param PersonnageController $controller Contrôleur de gestion des personnages.
      */
-    protected $controller;
-
     public function __construct(PersonnageController $controller)
     {
         parent::__construct($controller);
@@ -17,7 +17,6 @@ class RouteToggleCollection extends Route
 
     protected function get(array $params): void
     {
-        // Le contrôleur se débrouille pour récupérer l'ID (via $_GET)
         $this->controller->toggleCollection();
     }
 

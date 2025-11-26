@@ -5,6 +5,11 @@ use Controllers\MainController;
 
 class RouteIndex extends Route
 {
+    /**
+     * Constructeur de la route d'accueil.
+     *
+     * @param MainController $controller Contrôleur principal.
+     */
     public function __construct(MainController $controller)
     {
         parent::__construct($controller);

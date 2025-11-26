@@ -3,10 +3,15 @@ namespace Controllers\Router\Routes;
 
 use Controllers\PersonnageController;
 use Exception;
-use Controllers\Router\Routes\Route;
+use Helpers\Message;
 
 class RouteAddPerso extends Route
 {
+    /**
+     * Constructeur de la route d'ajout de personnage.
+     *
+     * @param PersonnageController $controller Contrôleur de gestion des personnages.
+     */
     public function __construct(PersonnageController $controller)
     {
         parent::__construct($controller);
@@ -30,7 +35,8 @@ class RouteAddPerso extends Route
             ];
             $this->controller->addPerso($data);
         } catch (Exception $e) {
-            $this->controller->displayAddPerso($e->getMessage());
+            $message = new Message($e->getMessage(), "error");
+            $this->controller->displayAddPerso($message);
         }
     }
 }

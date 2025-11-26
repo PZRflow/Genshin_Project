@@ -6,10 +6,10 @@ use Controllers\PersonnageController;
 class RouteMyCollection extends Route
 {
     /**
-     * @var PersonnageController
+     * Constructeur de la route de visualisation de la collection personnelle.
+     *
+     * @param PersonnageController $controller Contrôleur de gestion des personnages.
      */
-    protected $controller;
-
     public function __construct(PersonnageController $controller)
     {
         parent::__construct($controller);
@@ -22,7 +22,6 @@ class RouteMyCollection extends Route
 
     protected function post(array $params): void
     {
-        // Pas de formulaire POST sur cette page
         $this->get($params);
     }
 }

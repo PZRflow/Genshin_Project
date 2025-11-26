@@ -8,7 +8,6 @@ abstract class BasePDODAO
 {
     private ?PDO $db = null;
 
-    // Retourne une instance de PDO (singleton)
     protected function getDB(): PDO
     {
         if ($this->db === null) {
@@ -22,7 +21,6 @@ abstract class BasePDODAO
         return $this->db;
     }
 
-    // Exécute une requête SQL
     protected function execRequest(string $sql, array $params = []): \PDOStatement
     {
         $stmt = $this->getDB()->prepare($sql);

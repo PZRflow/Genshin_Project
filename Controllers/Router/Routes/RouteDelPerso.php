@@ -3,9 +3,15 @@ namespace Controllers\Router\Routes;
 
 use Controllers\PersonnageController;
 use Exception;
+use Helpers\Message;
 
 class RouteDelPerso extends Route
 {
+    /**
+     * Constructeur de la route de suppression de personnage.
+     *
+     * @param PersonnageController $controller Contrôleur de gestion des personnages.
+     */
     public function __construct(PersonnageController $controller)
     {
         parent::__construct($controller);
@@ -17,7 +23,8 @@ class RouteDelPerso extends Route
             $id = $this->getParam($params, 'id');
             $this->controller->deletePerso($id);
         } catch (Exception $e) {
-            $this->controller->index($e->getMessage());
+            $message = new Message($e->getMessage(), "error");
+            $this->controller->index($message);
         }
     }
 

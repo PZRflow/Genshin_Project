@@ -7,12 +7,22 @@ abstract class Route
 {
     protected $controller;
 
+    /**
+     * Constructeur de la route abstraite.
+     *
+     * @param object $controller Le contrôleur associé à cette route.
+     */
     public function __construct($controller)
     {
         $this->controller = $controller;
     }
 
-    // Méthode principale pour traiter la requête
+    /**
+     * Détermine la méthode HTTP (GET ou POST) et appelle la fonction correspondante.
+     *
+     * @param array $params Les paramètres de la requête.
+     * @return void
+     */
     public function action(array $params = []): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -22,7 +32,6 @@ abstract class Route
         }
     }
 
-    // Récupère un paramètre de la requête
     protected function getParam(array $array, string $paramName, bool $canBeEmpty = true): string
     {
         if (!isset($array[$paramName])) {
@@ -34,7 +43,6 @@ abstract class Route
         return $array[$paramName];
     }
 
-    // Méthodes à implémenter dans les classes filles
     abstract protected function get(array $params): void;
     abstract protected function post(array $params): void;
 }

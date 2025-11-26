@@ -17,6 +17,14 @@ class PersonnageService
     private UnitClassDAO $unitClassDAO;
     private OriginDAO $originDAO;
 
+    /**
+     * Constructeur du service de gestion des personnages.
+     *
+     * @param PersonnageDAO $personnageDAO
+     * @param ElementDAO $elementDAO
+     * @param UnitClassDAO $unitClassDAO
+     * @param OriginDAO $originDAO
+     */
     public function __construct(
         PersonnageDAO $personnageDAO,
         ElementDAO $elementDAO,
@@ -29,7 +37,11 @@ class PersonnageService
         $this->originDAO = $originDAO;
     }
 
-    // Récupère tous les personnages (avec leurs éléments/unitclass/origines)
+    /**
+     * Récupère tous les personnages et hydrate leurs objets liés (Element, Classe, Origine).
+     *
+     * @return array Liste d'objets Personnage complets.
+     */
     public function getAllPersonnages(): array
     {
         $personnagesData = $this->personnageDAO->getAll();
@@ -37,12 +49,10 @@ class PersonnageService
         foreach ($personnagesData as $data) {
             $personnage = new Personnage($data);
 
-            // Récupère les objets liés
             $elementData = $this->elementDAO->getByID($data['element']);
             $unitClassData = $this->unitClassDAO->getByID($data['unitclass']);
             $originData = $this->originDAO->getByID($data['origin']);
 
-            // Associe les objets au personnage
             $personnage->setElementObj($elementData ? new Element($elementData) : null);
             $personnage->setUnitClassObj($unitClassData ? new UnitClass($unitClassData) : null);
             $personnage->setOriginObj($originData ? new Origin($originData) : null);
@@ -52,8 +62,12 @@ class PersonnageService
         return $personnages;
     }
 
-
-    // Récupère un personnage par son ID
+    /**
+     * Récupère un personnage complet par son identifiant.
+     *
+     * @param string $id L'identifiant du personnage.
+     * @return Personnage|null Le personnage hydraté ou null.
+     */
     public function getPersonnageById(string $id): ?Personnage
     {
         $data = $this->personnageDAO->getByID($id);
@@ -63,7 +77,6 @@ class PersonnageService
 
         $personnage = new Personnage($data);
 
-        // Récupère les objets liés
         if (isset($data['element'])) {
             $elementData = $this->elementDAO->getByID($data['element']);
             $personnage->setElementObj($elementData ? new Element($elementData) : null);
@@ -82,39 +95,63 @@ class PersonnageService
         return $personnage;
     }
 
-    // Ajoute un personnage
+    /**
+     * Ajoute un nouveau personnage via le DAO.
+     *
+     * @param Personnage $personnage
+     * @return void
+     */
     public function addPersonnage(Personnage $personnage): void
     {
         $this->personnageDAO->add($personnage);
     }
 
-    // Met à jour un personnage
+    /**
+     * Met à jour un personnage existant.
+     *
+     * @param Personnage $personnage
+     * @return void
+     */
     public function updatePersonnage(Personnage $personnage): void
     {
         $this->personnageDAO->update($personnage);
     }
 
-    // Supprime un personnage
+    /**
+     * Supprime un personnage par son ID.
+     *
+     * @param string $id
+     * @return void
+     */
     public function deletePersonnage(string $id): void
     {
         $this->personnageDAO->delete($id);
     }
 
-    // Bascule l'état de collection
+    /**
+     * Ajoute ou retire un personnage de la collection d'un utilisateur.
+     *
+     * @param string $userId ID de l'utilisateur.
+     * @param string $persoId ID du personnage.
+     * @return void
+     */
     public function toggleCollection(string $userId, string $persoId): void {
         $this->personnageDAO->toggleCollection($userId, $persoId);
     }
 
-    // Récupère la collection d'un utilisateur sous forme d'Objets Personnage
+    /**
+     * Récupère la collection de personnages d'un utilisateur spécifique.
+     *
+     * @param string $userId ID de l'utilisateur.
+     * @return array Liste d'objets Personnage de la collection.
+     */
     public function getCollection(string $userId): array {
         $dataList = $this->personnageDAO->getAllByUserId($userId);
         $personnages = [];
 
-        // On réutilise la même logique que getAllPersonnages()
         foreach ($dataList as $data) {
             $personnage = new Personnage($data);
 
-            // Hydrater les objets liés (Element, Class...)
             $elementData = $this->elementDAO->getByID($data['element']);
             $unitClassData = $this->unitClassDAO->getByID($data['unitclass']);
             $originData = $data['origin'] ? $this->originDAO->getByID($data['origin']) : null;
@@ -128,11 +165,14 @@ class PersonnageService
         return $personnages;
     }
 
-    // Pour savoir si un perso spécifique est possédé (utile pour l'affichage du bouton +/-)
+    /**
+     * Vérifie si un utilisateur possède un personnage spécifique.
+     *
+     * @param string $userId ID de l'utilisateur.
+     * @param string $persoId ID du personnage.
+     * @return bool Vrai si possédé, faux sinon.
+     */
     public function isOwned(string $userId, string $persoId): bool {
         return $this->personnageDAO->isInCollection($userId, $persoId);
     }
-
-
-
 }

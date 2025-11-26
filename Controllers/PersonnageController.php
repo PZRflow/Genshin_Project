@@ -11,13 +11,24 @@ class PersonnageController
     private Engine $templates;
     private PersonnageService $personnageService;
 
+    /**
+     * Constructeur du contrôleur de personnages.
+     *
+     * @param Engine $templates Moteur de template Plates.
+     * @param PersonnageService $personnageService Service de gestion des personnages.
+     */
     public function __construct(Engine $templates, PersonnageService $personnageService)
     {
         $this->templates = $templates;
         $this->personnageService = $personnageService;
     }
 
-    // Affiche le formulaire d'ajout d'un personnage
+    /**
+     * Affiche le formulaire d'ajout d'un personnage avec les listes déroulantes nécessaires.
+     *
+     * @param Message|null $message Message optionnel à afficher.
+     * @return void
+     */
     public function displayAddPerso(?Message $message = null): void
     {
         $elementDAO = new \Models\ElementDAO();
@@ -35,7 +46,13 @@ class PersonnageController
             'origins' => $origins
         ]);
     }
-    // Ajoute un personnage en base de données
+
+    /**
+     * Traite l'ajout d'un personnage en base de données.
+     *
+     * @param array $data Les données du formulaire.
+     * @return void
+     */
     public function addPerso(array $data): void
     {
         try {
@@ -53,12 +70,17 @@ class PersonnageController
             $this->index($message);
         } catch (\Exception $e) {
             $message = new Message("Erreur : " . $e->getMessage(), "error");
-            $this->displayAddPerso($message); // Passe un objet Message
+            $this->displayAddPerso($message);
         }
     }
 
-
-    // Affiche le formulaire de modification d'un personnage
+    /**
+     * Affiche le formulaire de modification d'un personnage existant.
+     *
+     * @param string $id L'identifiant du personnage à modifier.
+     * @param Message|null $message Message optionnel à afficher.
+     * @return void
+     */
     public function displayEditPerso(string $id, ?Message $message = null): void
     {
         $personnage = $this->personnageService->getPersonnageById($id);
@@ -85,9 +107,12 @@ class PersonnageController
         ]);
     }
 
-
-
-    // Met à jour un personnage en base de données
+    /**
+     * Traite la mise à jour d'un personnage en base de données.
+     *
+     * @param array $data Les nouvelles données du personnage.
+     * @return void
+     */
     public function editPerso(array $data): void
     {
         try {
@@ -105,12 +130,16 @@ class PersonnageController
             $this->index($message);
         } catch (\Exception $e) {
             $message = new Message("Erreur : " . $e->getMessage(), "error");
-            $this->displayEditPerso($data['id'], $message); // Passe un objet Message
+            $this->displayEditPerso($data['id'], $message);
         }
     }
 
-
-    // Supprime un personnage
+    /**
+     * Supprime un personnage par son identifiant.
+     *
+     * @param string $id L'identifiant du personnage.
+     * @return void
+     */
     public function deletePerso(string $id): void
     {
         try {
@@ -123,13 +152,23 @@ class PersonnageController
         }
     }
 
-    // Affiche la page d'accueil (redirige vers MainController)
+    /**
+     * Redirige vers la méthode index du MainController pour afficher l'accueil.
+     *
+     * @param Message|null $message Message optionnel à afficher.
+     * @return void
+     */
     public function index(?Message $message = null): void
     {
         (new MainController($this->templates, $this->personnageService))->index($message);
     }
 
-
+    /**
+     * Ajoute un nouvel élément (Type, Origine ou Classe) en base de données.
+     *
+     * @param array $data Les données de l'élément (type, nom, image).
+     * @return void
+     */
     public function addElement(array $data): void
     {
         try {
@@ -167,6 +206,12 @@ class PersonnageController
         }
     }
 
+    /**
+     * Affiche le formulaire d'ajout d'un élément.
+     *
+     * @param Message|null $message Message optionnel à afficher.
+     * @return void
+     */
     public function displayAddElementForm(?Message $message = null): void
     {
         echo $this->templates->render('add-element', [
@@ -174,12 +219,15 @@ class PersonnageController
         ]);
     }
 
-
-    // Action appelée quand on clique sur le bouton Collection
+    /**
+     * Ajoute ou retire un personnage de la collection de l'utilisateur connecté.
+     * Redirige vers la page précédente.
+     *
+     * @return void
+     */
     public function toggleCollection() {
-        // Vérification Auth
         if (!\Services\AuthService::isAuthenticated()) {
-            header('Location: index.php?action=login'); // Redirige si pas connecté
+            header('Location: index.php?action=login');
             exit;
         }
 
@@ -187,16 +235,18 @@ class PersonnageController
             $userId = \Services\AuthService::getCurrentUserId();
             $persoId = $_GET['id'];
 
-            // Appel au service
             $this->personnageService->toggleCollection($userId, $persoId);
         }
 
-        // On revient à la page précédente (ou index)
         header('Location: index.php');
         exit;
     }
 
-    // Afficher la page "Ma Collection"
+    /**
+     * Affiche la page "Ma Collection" contenant uniquement les personnages de l'utilisateur.
+     *
+     * @return void
+     */
     public function displayCollection() {
         if (!\Services\AuthService::isAuthenticated()) {
             header('Location: index.php?action=login');
@@ -204,7 +254,6 @@ class PersonnageController
         }
 
         $userId = \Services\AuthService::getCurrentUserId();
-        // Récupère seulement mes persos
         $myPersos = $this->personnageService->getCollection($userId);
 
         echo $this->templates->render('home', [
@@ -213,8 +262,4 @@ class PersonnageController
             'isCollectionPage' => true
         ]);
     }
-
-
-
 }
-

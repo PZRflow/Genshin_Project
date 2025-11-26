@@ -4,6 +4,13 @@ namespace Services;
 class LogService {
     private const LOG_DIR = __DIR__ . '/../logs/';
 
+    /**
+     * Enregistre une action dans le fichier de log du mois courant.
+     *
+     * @param string $action Le type d'action (ex: CREATE, DELETE).
+     * @param string $message Le message descriptif.
+     * @return void
+     */
     public static function logAction(string $action, string $message): void {
         $logFile = self::getLogFilePath();
         $logMessage = '[' . date('Y-m-d H:i:s') . "] $action: $message" . PHP_EOL;
@@ -19,12 +26,16 @@ class LogService {
         return $logFile;
     }
 
+    /**
+     * Récupère la liste des fichiers de logs disponibles (commençant par GENSHIN_).
+     *
+     * @return array Liste des noms de fichiers.
+     */
     public static function getAvailableLogFiles(): array {
         $files = [];
         if (file_exists(self::LOG_DIR)) {
             $logFiles = scandir(self::LOG_DIR);
             foreach ($logFiles as $file) {
-                // CORRECTION ICI : Remplacer 'MIHOYO_' par 'GENSHIN_'
                 if (strpos($file, 'GENSHIN_') === 0) {
                     $files[] = $file;
                 }
@@ -33,6 +44,12 @@ class LogService {
         return $files;
     }
 
+    /**
+     * Récupère le contenu d'un fichier de log spécifique.
+     *
+     * @param string $filename Le nom du fichier.
+     * @return string Le contenu du fichier.
+     */
     public static function getLogContent(string $filename): string {
         $filePath = self::LOG_DIR . $filename;
         return file_exists($filePath) ? file_get_contents($filePath) : "Aucun log trouvé pour ce fichier.";

@@ -6,18 +6,21 @@ use Exception;
 
 class RouteLogin extends Route
 {
+    /**
+     * Constructeur de la route de connexion.
+     *
+     * @param AuthController $controller Contrôleur d'authentification.
+     */
     public function __construct(AuthController $controller)
     {
         parent::__construct($controller);
     }
 
-    // Affiche le formulaire de connexion
     protected function get(array $params): void
     {
         $this->controller->displayLogin($params['message'] ?? null);
     }
 
-    // Traite la connexion
     protected function post(array $params): void
     {
         try {

@@ -3,8 +3,15 @@ namespace Controllers\Router\Routes;
 
 use Controllers\PersonnageController;
 use Exception;
+use Helpers\Message;
+
 class RouteEditPerso extends Route
 {
+    /**
+     * Constructeur de la route de modification de personnage.
+     *
+     * @param PersonnageController $controller Contrôleur de gestion des personnages.
+     */
     public function __construct(PersonnageController $controller)
     {
         parent::__construct($controller);
@@ -16,7 +23,8 @@ class RouteEditPerso extends Route
             $id = $this->getParam($params, 'id');
             $this->controller->displayEditPerso($id, $params['message'] ?? null);
         } catch (Exception $e) {
-            $this->controller->index($e->getMessage());
+            $message = new Message($e->getMessage(), "error");
+            $this->controller->index($message);
         }
     }
 
@@ -34,7 +42,8 @@ class RouteEditPerso extends Route
             ];
             $this->controller->editPerso($data);
         } catch (Exception $e) {
-            $this->controller->displayEditPerso($params['id'], $e->getMessage());
+            $message = new Message($e->getMessage(), "error");
+            $this->controller->displayEditPerso($params['id'], $message);
         }
     }
 }

@@ -19,12 +19,19 @@ use League\Plates\Engine;
 use Services\AuthService;
 use Services\PersonnageService;
 use Helpers\Message;
+
 class Router
 {
     private Engine $templates;
     private array $routes = [];
     private array $controllers = [];
 
+    /**
+     * Constructeur du routeur.
+     * Initialise le moteur de template ainsi que les listes de contrôleurs et de routes.
+     *
+     * @param Engine $templates Moteur de template Plates.
+     */
     public function __construct(Engine $templates)
     {
         $this->templates = $templates;
@@ -32,7 +39,6 @@ class Router
         $this->createRouteList();
     }
 
-    // Crée la liste des contrôleurs
     private function createControllerList(): void
     {
         $personnageDAO = new \Models\PersonnageDAO();
@@ -56,8 +62,6 @@ class Router
         ];
     }
 
-
-    // Crée la liste des routes
     private function createRouteList(): void
     {
         $this->routes = [
@@ -74,7 +78,14 @@ class Router
         ];
     }
 
-    // Gère le routage en fonction de $_GET et $_POST
+    /**
+     * Gère le routage de la requête entrante.
+     * Analyse les paramètres GET/POST pour diriger vers la bonne route et la bonne méthode.
+     *
+     * @param array $get Paramètres de l'URL ($_GET).
+     * @param array $post Données du formulaire ($_POST).
+     * @return void
+     */
     public function routing(array $get, array $post): void
     {
         try {
@@ -89,11 +100,9 @@ class Router
             $route->action($method === 'POST' ? $post : $get);
 
         } catch (RouteNotFoundException $e) {
-            // Redirige vers l'index avec un message d'erreur
             $this->controllers['main']->index(new Message("Erreur : " . $e->getMessage(), "error"));
 
         } catch (\Exception $e) {
-            // Affiche une page d'erreur générique
             echo $this->templates->render('error', [
                 'message' => $e->getMessage()
             ]);

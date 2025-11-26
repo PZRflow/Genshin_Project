@@ -3,7 +3,7 @@
 namespace Config;
 use Exception;
 
-define('BASE_URL', '/TFT_projet/');
+define('BASE_URL', '/Genshin_Projet/');
 
 
 class Config {

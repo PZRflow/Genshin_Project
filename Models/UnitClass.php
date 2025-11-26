@@ -7,13 +7,23 @@ class UnitClass
     private string $name;
     private string $urlImg;
 
+    /**
+     * Constructeur de la classe d'unité.
+     *
+     * @param array $data Données à hydrater.
+     */
     public function __construct(array $data)
     {
         $this->urlImg = '';
         $this->hydrate($data);
     }
 
-    // Hydratation
+    /**
+     * Hydrate l'objet avec les données fournies.
+     *
+     * @param array $data Tableau associatif clé/valeur.
+     * @return void
+     */
     public function hydrate(array $data): void
     {
         foreach ($data as $key => $value) {
@@ -24,13 +34,48 @@ class UnitClass
         }
     }
 
-    // Getters
+    /**
+     * Récupère l'identifiant de la classe.
+     *
+     * @return string|null
+     */
     public function getId(): ?string { return $this->id; }
+
+    /**
+     * Récupère le nom de la classe.
+     *
+     * @return string
+     */
     public function getName(): string { return $this->name; }
+
+    /**
+     * Récupère l'URL de l'image de la classe.
+     *
+     * @return string
+     */
     public function getUrlImg(): string { return $this->urlImg; }
 
-    // Setters
+    /**
+     * Définit l'identifiant de la classe.
+     *
+     * @param string|null $id
+     * @return void
+     */
     public function setId(?string $id): void { $this->id = $id; }
+
+    /**
+     * Définit le nom de la classe.
+     *
+     * @param string $name
+     * @return void
+     */
     public function setName(string $name): void { $this->name = $name; }
+
+    /**
+     * Définit l'URL de l'image.
+     *
+     * @param string $urlImg
+     * @return void
+     */
     public function setUrl_img(string $urlImg): void { $this->urlImg = $urlImg; }
 }
